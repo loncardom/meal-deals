@@ -9,20 +9,22 @@ type Deal = {
 };
 
 const deals: Deal[] = [
-  { restaurant: "KFC", title: "Famous Chicken Sandwich", price: "$5.95", detail: "Friday's Sandwich of the Day. Participating locations; confirm the Erin Mills restaurant before ordering.", badges: ["FRIDAY ONLY", "PUBLIC", "UNDER $10"], source: "https://www.kfc.ca/promo-terms", sourceLabel: "KFC promotion terms" },
-  { restaurant: "Domino's · Store 10285", title: "Medium 1-topping pizza", price: "$8", detail: "Coupon FIRE. $3 from each pizza goes to the fundraiser. Store at 2555 Erin Centre Blvd.", badges: ["PUBLIC", "LOCAL STORE", "UNDER $10"], source: "https://pizza.dominos.ca/Mississauga-Ontario-10285/coupons/", sourceLabel: "Store 10285 coupons" },
   { restaurant: "Domino's · Store 10285", title: "Mix & match — 2 or more", price: "$8.99 ea.", detail: "Medium 2-topping pizza, pasta, chicken, select breads, desserts and more. Coupon 893WS; extras may cost more.", badges: ["PUBLIC", "LOCAL STORE", "2+ ITEMS"], source: "https://pizza.dominos.ca/Mississauga-Ontario-10285/coupons/", sourceLabel: "Store 10285 coupons" },
+  { restaurant: "Domino's · Store 10285", title: "Large 4-topping pizza", price: "$16.99", detail: "Coupon 4201 at the 2555 Erin Centre Blvd store. The location-specific coupon page currently lists this offer.", badges: ["PUBLIC", "LOCAL STORE", "SATURDAY"], source: "https://pizza.dominos.ca/Mississauga-Ontario-10285/coupons/", sourceLabel: "Store 10285 coupons" },
   { restaurant: "Turtle Jack's · Erin Mills", title: "Daily Happy Hour", price: "$5–$16", detail: "Today from 2–5 pm and 8 pm–close. Includes $6 sweet potato fries, $15 classic burger and $7 draught.", badges: ["TODAY", "PUBLIC", "TIME LIMITED"], source: "https://turtlejacks.com/happy-hour/", sourceLabel: "Turtle Jack's Happy Hour" },
-  { restaurant: "Subway", title: "Blue Jays game-day Footlong", price: "25% off", detail: "Use STRIKEOUT on a scheduled Blue Jays game day. App/online orders only; participating Canadian restaurants.", badges: ["GAME DAY", "ONLINE", "CODE REQUIRED"], source: "https://www.subway.com/en-ca/", sourceLabel: "Subway Canada offers" },
-  { restaurant: "Pizza Pizza", title: "Large pizza + 3 drinks", price: "$16.25", detail: "Large 3-topping pizza and three drinks. Public catalog price; local pricing at 2690 Erin Centre Blvd needs checkout confirmation.", badges: ["PUBLIC", "LOCAL CHECK NEEDED"], source: "https://www.pizzapizza.ca/catalog/products/specials-11035/", sourceLabel: "Pizza Pizza specials" },
-  { restaurant: "Sultan Ahmet · Mississauga", title: "Lunch special doner", price: "$14.50", detail: "Chicken, beef, or mixed doner with bulgur, rice, or bread. Lunch hours are not clearly published online.", badges: ["LUNCH", "PUBLIC", "TIME CHECK NEEDED"], source: "https://order.sultanahmet.ca/", sourceLabel: "Mississauga ordering menu" },
+  { restaurant: "Subway", title: "Five classic Footlongs", price: "Under $10", detail: "Tuna, ham, turkey breast, Veggie Delite, or Cold Cut Combo. Limited-time public offer; participation may vary.", badges: ["PUBLIC", "SATURDAY", "UNDER $10"], source: "https://www.subway.com/en-ca/", sourceLabel: "Subway Canada offers" },
+  { restaurant: "Subway", title: "Any Power Bowl", price: "20% off", detail: "Use code 20OFFBOWL when ordering. The offer is currently displayed on Subway Canada's public homepage.", badges: ["PUBLIC", "CODE REQUIRED", "ONLINE"], source: "https://www.subway.com/en-ca/", sourceLabel: "Subway Canada offers" },
+  { restaurant: "Subway", title: "Buy 2 Footlongs, get a 3rd free", price: "3rd free", detail: "Buy any two Footlong subs and use code 3SUBS to receive another Footlong free. Participation may vary.", badges: ["PUBLIC", "CODE REQUIRED", "3 ITEMS"], source: "https://www.subway.com/en-ca/", sourceLabel: "Subway Canada offers" },
   { restaurant: "New York Fries", title: "CAA member discount", price: "10% off", detail: "Present a valid CAA membership before ordering. Participating locations; cannot be combined with another offer.", badges: ["MEMBERSHIP", "PUBLIC TERMS"], source: "https://www.newyorkfries.com/promotions", sourceLabel: "New York Fries promotions" },
+  { restaurant: "New York Fries", title: "Repeat-visit points boost", price: "2×–4× points", detail: "Fry Society members: spend at least $5 per visit, 2–4 times by August 30, to earn a matching points multiplier. Points post August 31.", badges: ["MEMBERSHIP", "ENDS AUG 30", "MIN. $5"], source: "https://www.newyorkfries.com/promotions", sourceLabel: "New York Fries promotions" },
 ];
 
 const uncertain = [
   { name: "Hero Certified Burgers", state: "Schedule unclear", text: "Seven Daily Deal items and prices are public, but the page does not map them to weekdays." },
   { name: "Thai Express", state: "Partially observable", text: "The Erin Mills outlet advertises daily specials, but today's item and price are not exposed." },
-  { name: "Taza Xpress", state: "Outside radius", text: "Friday is two chicken shawarma on the rocks, but no price is published and the surfaced outlet is too far away." },
+  { name: "KFC", state: "Saturday item unclear", text: "KFC lists a $5.95 Sandwich of the Day promotion, but its public terms do not expose which sandwich applies Saturday." },
+  { name: "Pizza Pizza", state: "Checkout required", text: "The specials page now gates current products and local pricing behind address selection, so the earlier $16.25 price is not confirmed." },
+  { name: "Sultan Ahmet", state: "Time unclear", text: "The lunch-special menu is public, but Saturday lunch availability is not clearly stated online." },
   { name: "Firehouse Subs", state: "Conditional", text: "BOGO medium sub only if a Friday–Sunday MLB game goes to extra innings; Rewards account required." },
 ];
 
@@ -37,8 +39,8 @@ export default function Home() {
       </header>
 
       <section className="hero" id="top">
-        <div><p className="eyebrow">FRIDAY · AUGUST 21, 2026</p><h1>Deals today</h1><p className="lede">Useful food deals near the mall, with uncertainty shown instead of hidden.</p></div>
-        <aside className="research-card" aria-label="Research coverage"><span className="pulse" aria-hidden="true" /><div><strong>16 sources checked</strong><span>7 useful today · 3 partial · 6 app or session-bound</span></div></aside>
+        <div><p className="eyebrow">SATURDAY · AUGUST 22, 2026</p><h1>Deals today</h1><p className="lede">Useful food deals near the mall, with uncertainty shown instead of hidden.</p></div>
+        <aside className="research-card" aria-label="Research coverage"><span className="pulse" aria-hidden="true" /><div><strong>Saturday source review</strong><span>8 verified offers · 5 unresolved · 5 app-only</span></div></aside>
       </section>
 
       <section className="section-shell" aria-labelledby="today-heading">
@@ -70,7 +72,7 @@ export default function Home() {
         <div className="app-chips">{appOnly.map((name) => <span key={name}>{name}</span>)}</div>
       </section>
 
-      <footer><p><strong>Research snapshot:</strong> August 21, 2026 · America/Toronto</p><p>Offers can change without notice. Verify participation before travelling or ordering.</p></footer>
+      <footer><p><strong>Research snapshot:</strong> August 22, 2026 · America/Toronto</p><p>Offers can change without notice. Verify participation before travelling or ordering.</p></footer>
     </main>
   );
 }
