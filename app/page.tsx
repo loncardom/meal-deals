@@ -1,3 +1,7 @@
+"use client";
+
+import { useEffect, useState } from "react";
+
 type Deal = {
   restaurant: string;
   title: string;
@@ -6,17 +10,23 @@ type Deal = {
   badges: string[];
   source: string;
   sourceLabel: string;
+  days?: number[];
+  validFrom?: string;
+  validUntil?: string;
 };
 
+const EVERY_DAY = [0, 1, 2, 3, 4, 5, 6];
+
 const deals: Deal[] = [
-  { restaurant: "Domino's · Store 10285", title: "Mix & match — 2 or more", price: "$8.99 ea.", detail: "Medium 2-topping pizza, pasta, chicken, select breads, desserts and more. Coupon 893WS; extras may cost more.", badges: ["PUBLIC", "LOCAL STORE", "2+ ITEMS"], source: "https://pizza.dominos.ca/Mississauga-Ontario-10285/coupons/", sourceLabel: "Store 10285 coupons" },
-  { restaurant: "Domino's · Store 10285", title: "Large 4-topping pizza", price: "$16.99", detail: "Coupon 4201 at the 2555 Erin Centre Blvd store. The location-specific coupon page currently lists this offer.", badges: ["PUBLIC", "LOCAL STORE", "SATURDAY"], source: "https://pizza.dominos.ca/Mississauga-Ontario-10285/coupons/", sourceLabel: "Store 10285 coupons" },
-  { restaurant: "Turtle Jack's · Erin Mills", title: "Daily Happy Hour", price: "$5–$16", detail: "Today from 2–5 pm and 8 pm–close. Includes $6 sweet potato fries, $15 classic burger and $7 draught.", badges: ["TODAY", "PUBLIC", "TIME LIMITED"], source: "https://turtlejacks.com/happy-hour/", sourceLabel: "Turtle Jack's Happy Hour" },
-  { restaurant: "Subway", title: "Five classic Footlongs", price: "Under $10", detail: "Tuna, ham, turkey breast, Veggie Delite, or Cold Cut Combo. Limited-time public offer; participation may vary.", badges: ["PUBLIC", "SATURDAY", "UNDER $10"], source: "https://www.subway.com/en-ca/", sourceLabel: "Subway Canada offers" },
-  { restaurant: "Subway", title: "Any Power Bowl", price: "20% off", detail: "Use code 20OFFBOWL when ordering. The offer is currently displayed on Subway Canada's public homepage.", badges: ["PUBLIC", "CODE REQUIRED", "ONLINE"], source: "https://www.subway.com/en-ca/", sourceLabel: "Subway Canada offers" },
-  { restaurant: "Subway", title: "Buy 2 Footlongs, get a 3rd free", price: "3rd free", detail: "Buy any two Footlong subs and use code 3SUBS to receive another Footlong free. Participation may vary.", badges: ["PUBLIC", "CODE REQUIRED", "3 ITEMS"], source: "https://www.subway.com/en-ca/", sourceLabel: "Subway Canada offers" },
-  { restaurant: "New York Fries", title: "CAA member discount", price: "10% off", detail: "Present a valid CAA membership before ordering. Participating locations; cannot be combined with another offer.", badges: ["MEMBERSHIP", "PUBLIC TERMS"], source: "https://www.newyorkfries.com/promotions", sourceLabel: "New York Fries promotions" },
-  { restaurant: "New York Fries", title: "Repeat-visit points boost", price: "2×–4× points", detail: "Fry Society members: spend at least $5 per visit, 2–4 times by August 30, to earn a matching points multiplier. Points post August 31.", badges: ["MEMBERSHIP", "ENDS AUG 30", "MIN. $5"], source: "https://www.newyorkfries.com/promotions", sourceLabel: "New York Fries promotions" },
+  { restaurant: "Domino's · Store 10285", title: "Mix & match — 2 or more", price: "$8.99 ea.", detail: "Medium 2-topping pizza, pasta, chicken, select breads, desserts and more. Coupon 893WS; extras may cost more.", badges: ["PUBLIC", "LOCAL STORE", "2+ ITEMS"], source: "https://pizza.dominos.ca/Mississauga-Ontario-10285/coupons/", sourceLabel: "Store 10285 coupons", days: EVERY_DAY },
+  { restaurant: "Domino's · Store 10285", title: "Large 4-topping pizza", price: "$16.99", detail: "Coupon 4201 at the 2555 Erin Centre Blvd store. The location-specific coupon page currently lists this offer.", badges: ["PUBLIC", "LOCAL STORE", "COUPON 4201"], source: "https://pizza.dominos.ca/Mississauga-Ontario-10285/coupons/", sourceLabel: "Store 10285 coupons", days: EVERY_DAY },
+  { restaurant: "Domino's · Store 10285", title: "Build-your-own pizzas", price: "40% off", detail: "Monday-only coupon 8642. The dashboard will show this card automatically on Mondays.", badges: ["PUBLIC", "MONDAY ONLY", "COUPON 8642"], source: "https://pizza.dominos.ca/Mississauga-Ontario-10285/coupons/", sourceLabel: "Store 10285 coupons", days: [1] },
+  { restaurant: "Turtle Jack's · Erin Mills", title: "Daily Happy Hour", price: "$5–$16", detail: "Today from 2–5 pm and 8 pm–close. Includes $6 sweet potato fries, $15 classic burger and $7 draught.", badges: ["TODAY", "PUBLIC", "TIME LIMITED"], source: "https://turtlejacks.com/happy-hour/", sourceLabel: "Turtle Jack's Happy Hour", days: EVERY_DAY },
+  { restaurant: "Subway", title: "Five classic Footlongs", price: "Under $10", detail: "Tuna, ham, turkey breast, Veggie Delite, or Cold Cut Combo. Limited-time public offer; participation may vary.", badges: ["PUBLIC", "LIMITED TIME", "UNDER $10"], source: "https://www.subway.com/en-ca/", sourceLabel: "Subway Canada offers", days: EVERY_DAY },
+  { restaurant: "Subway", title: "Any Power Bowl", price: "20% off", detail: "Use code 20OFFBOWL when ordering. The offer is currently displayed on Subway Canada's public homepage.", badges: ["PUBLIC", "CODE REQUIRED", "ONLINE"], source: "https://www.subway.com/en-ca/", sourceLabel: "Subway Canada offers", days: EVERY_DAY },
+  { restaurant: "Subway", title: "Buy 2 Footlongs, get a 3rd free", price: "3rd free", detail: "Buy any two Footlong subs and use code 3SUBS to receive another Footlong free. Participation may vary.", badges: ["PUBLIC", "CODE REQUIRED", "3 ITEMS"], source: "https://www.subway.com/en-ca/", sourceLabel: "Subway Canada offers", days: EVERY_DAY },
+  { restaurant: "New York Fries", title: "CAA member discount", price: "10% off", detail: "Present a valid CAA membership before ordering. Participating locations; cannot be combined with another offer.", badges: ["MEMBERSHIP", "PUBLIC TERMS"], source: "https://www.newyorkfries.com/promotions", sourceLabel: "New York Fries promotions", days: EVERY_DAY },
+  { restaurant: "New York Fries", title: "Repeat-visit points boost", price: "2×–4× points", detail: "Fry Society members: spend at least $5 per visit, 2–4 times by August 30, to earn a matching points multiplier. Points post August 31.", badges: ["MEMBERSHIP", "ENDS AUG 30", "MIN. $5"], source: "https://www.newyorkfries.com/promotions", sourceLabel: "New York Fries promotions", days: EVERY_DAY, validFrom: "2026-08-07", validUntil: "2026-08-30" },
 ];
 
 const uncertain = [
@@ -30,7 +40,44 @@ const uncertain = [
 
 const appOnly = ["A&W", "Tim Hortons", "Taco Bell", "Freshii", "Poulet Rouge"];
 
+type TorontoDay = { dateKey: string; dayIndex: number; label: string };
+
+function getTorontoDay(date = new Date()): TorontoDay {
+  const parts = new Intl.DateTimeFormat("en-CA", {
+    timeZone: "America/Toronto",
+    weekday: "long",
+    year: "numeric",
+    month: "2-digit",
+    day: "2-digit",
+  }).formatToParts(date);
+  const value = (type: Intl.DateTimeFormatPartTypes) => parts.find((part) => part.type === type)?.value ?? "";
+  const weekday = value("weekday");
+  const dayIndex = ["Sunday", "Monday", "Tuesday", "Wednesday", "Thursday", "Friday", "Saturday"].indexOf(weekday);
+  return {
+    dateKey: `${value("year")}-${value("month")}-${value("day")}`,
+    dayIndex,
+    label: `${weekday} · ${new Intl.DateTimeFormat("en-CA", { timeZone: "America/Toronto", month: "long", day: "numeric", year: "numeric" }).format(date)}`,
+  };
+}
+
+function isActive(deal: Deal, today: TorontoDay) {
+  return (!deal.days || deal.days.includes(today.dayIndex))
+    && (!deal.validFrom || today.dateKey >= deal.validFrom)
+    && (!deal.validUntil || today.dateKey <= deal.validUntil);
+}
+
 export default function Home() {
+  const [today, setToday] = useState<TorontoDay | null>(null);
+
+  useEffect(() => {
+    const refreshDate = () => setToday(getTorontoDay());
+    refreshDate();
+    const timer = window.setInterval(refreshDate, 60_000);
+    return () => window.clearInterval(timer);
+  }, []);
+
+  const activeDeals = today ? deals.filter((deal) => isActive(deal, today)) : [];
+
   return (
     <main>
       <header className="topbar">
@@ -39,14 +86,14 @@ export default function Home() {
       </header>
 
       <section className="hero" id="top">
-        <div><p className="eyebrow">SATURDAY · AUGUST 22, 2026</p><h1>Deals today</h1><p className="lede">Useful food deals near the mall, with uncertainty shown instead of hidden.</p></div>
-        <aside className="research-card" aria-label="Research coverage"><span className="pulse" aria-hidden="true" /><div><strong>Saturday source review</strong><span>8 verified offers · 5 unresolved · 5 app-only</span></div></aside>
+        <div><p className="eyebrow">{today?.label.toUpperCase() ?? "TORONTO TIME"}</p><h1>Deals today</h1><p className="lede">Useful food deals near the mall, with uncertainty shown instead of hidden.</p></div>
+        <aside className="research-card" aria-label="Research coverage"><span className="pulse" aria-hidden="true" /><div><strong>Automatic daily schedule</strong><span>{today ? `${activeDeals.length} active today` : "Checking today's date…"} · sources reviewed Aug 23</span></div></aside>
       </section>
 
       <section className="section-shell" aria-labelledby="today-heading">
         <div className="section-heading"><div><p className="section-kicker">READY TO USE</p><h2 id="today-heading">Best-supported deals</h2></div><p>Prices before tax · tap source to verify</p></div>
         <div className="deal-grid">
-          {deals.map((deal) => (
+          {activeDeals.map((deal) => (
             <article className="deal-card" key={`${deal.restaurant}-${deal.title}`}>
               <div className="card-top"><p className="restaurant">{deal.restaurant}</p><p className="price">{deal.price}</p></div>
               <h3>{deal.title}</h3><p className="deal-detail">{deal.detail}</p>
@@ -72,7 +119,7 @@ export default function Home() {
         <div className="app-chips">{appOnly.map((name) => <span key={name}>{name}</span>)}</div>
       </section>
 
-      <footer><p><strong>Research snapshot:</strong> August 22, 2026 · America/Toronto</p><p>Offers can change without notice. Verify participation before travelling or ordering.</p></footer>
+      <footer><p><strong>Schedule engine:</strong> America/Toronto · sources reviewed August 23, 2026</p><p>Recurring offers are selected by weekday and dated offers expire automatically. Verify participation before travelling or ordering.</p></footer>
     </main>
   );
 }
