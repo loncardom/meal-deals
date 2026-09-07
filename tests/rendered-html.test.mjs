@@ -6,7 +6,7 @@ async function render() {
   workerUrl.searchParams.set("test", `${process.pid}-${Date.now()}`);
   const { default: worker } = await import(workerUrl.href);
   return worker.fetch(
-    new Request("http://localhost/", { headers: { accept: "text/html" } }),
+    new Request("http://localhost/meal-deals", { headers: { accept: "text/html" } }),
     { ASSETS: { fetch: async () => new Response("Not found", { status: 404 }) } },
     { waitUntil() {}, passThroughOnException() {} },
   );
@@ -20,7 +20,9 @@ test("renders the deals dashboard", async () => {
   assert.match(html, /<title>Erin Mills Deals — Deals Today<\/title>/i);
   assert.match(html, /Deals today/i);
   assert.match(html, /Best-supported deals/i);
-  assert.match(html, /Famous Chicken Sandwich/i);
+  assert.match(html, /Big Crunch sandwich/i);
+  assert.match(html, /Mix-and-match points boost/i);
+  assert.match(html, /sources reviewed September 7, 2026/i);
   assert.match(html, /Store 10285 coupons/i);
   assert.match(html, /Real deals, missing details/i);
   assert.match(html, /Check the app/i);
